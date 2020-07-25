@@ -1,0 +1,28 @@
+
+name: Deploy to Angrezi Server
+
+on:
+  push:
+    branches: [ master ]
+    paths-ignore:
+    - '.environment/**'
+  pull_request:
+    branches: [ master ]
+    paths-ignore:
+    - '.environment/**'
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Lint Deploy Scripts
+        uses: azohra/shell-linter@latest
+        with:
+          path: ".environment"
+  
+      - name: Deploy Application
+        run: sudo /usr/local/sbin/run-deploy ${{ github.event.repository.name }}
